@@ -20,25 +20,53 @@ JVM의 Runtime Data Area에 로드하는 모듈이다.
 - 한번에 모든 클래스를 메모리에 올리지 않고,
 어플리케이션에서 필요한 경우 동적으로 메모리에 적재한다. ( = 동적 클래스 로딩 )
 
-- 2. Linking 단계에서, Verifying / Preparing / Resolving 이 세 단계를 거친다.
+- 2. Linking 단계에서, Verify / Prepare / Resolve 세 단계를 거친다.
 
 [1] Loading
 - 클래스 파일을 가져와서 JVM의 메모리에 로드한다.
+- Runtime Data Area의 Method Area에 로드
+- 메서드, 변수, 클래스, 인터페이스, 열거형을 구분하여 저장한다.
+
+< Class Loader 의 종류 >
+- BootStrap Class Loader : JVM 시작 시 가장 먼저 실행되는 클래스 로더
+  - Java Class를 로드할 수 있는 자바 자체의 클래스 로더, java.io / java.net / java.util / java.lang 과 같은 기초가 되는 클래스를 로드함.
+
+- Extension Class Loader
+  - 확장 자바 클래스를 로드한다.
+  - Bootstrap Class Loader를 부모로 가진다.
+  - jre/lib/ext 디렉터리에 있는 클래스들을 로드
+
+- Application Class Loader
+  - ClassPath에 있는 클래스파일 또는 jar에 속한 클래스를 로드한다.
+  - 개발자가 생성한 .class 확장자 파일을 로드한다.
+  - System Class Loader라고도 한다.
 
 [2] Linking
 - 클래스 파일을 사용하기 위해 검증하는 과정이다.
 
-2-1. Verifying ( 검증 )
-- 읽어들인 클래스가 JVM 명세에 명시된 대로 구성되어 있는지 검사한다.
+2-1. Verify ( 검증 )
+- 읽어들인 클래스 파일이 JVM 명세에 명시된 대로 구성되어 있는지 검사한다.
+- 이 단계에서 실패 시, `java.lang.VerifyError` 발생
 
-2-2. Preparing ( 준비 )
-- 클래스가 필요로 하는 메모리를 할당한다.
+2-2. Prepare ( 준비 )
+- 클래스가 필요로 하는 메모리 할당.
+- 메모리 할당, static field를 기본값으로 초기화 ( = 사용자가 지정한 값이 아니라 자료형의 기본값 )
 
-2-3. Resolving ( 분석 )
+2-3. Resolve ( 분석 )
 - 클래스의 상수 풀 내에 모든 심볼릭 레퍼런스를 다이렉트 레퍼런스로 변경한다.
+: 심볼릭 레퍼런스 -> 메모리의 주소가 아닌, 이름에 의한 참조
+: 다이렉트 레퍼런스 -> 메모리의 주소에 의한 참조
 
 3. Initialization ( 초기화 )
-- 클래스 변수들을 적절한 값으로 초기화한다. ( static 필드들을 설정된 값으로 초기화 )
+- 클래스 변수들을 적절한 값으로 초기화한다. ( ex. static 필드들을 설정된 값으로 초기화 )
+
+< 각 클래스 로더의 동작 과정 >
+1. Method Area에 클래스가 로드 되어있는지 확인
+2. 없다면 시스템 클래스 로더 ( Application Class Loader 에 클래스 로드 요청
+3. 시스템 클래스로더 -> 확장 클래스 로더 -> 부트스트랩 클래스 로더로 위임함.
+4. 위에서부터 차례대로 클래스 존재 확인.
+5. 전부 없다면 `ClassNotFoundException` 발생.
+
 
 ### [ Runtime Data Area ]
 ![img.png](../img/1-week-jvm-runtime-data-area.png)
@@ -65,6 +93,9 @@ JVM의 Runtime Data Area에 로드하는 모듈이다.
 : Native Method를 수행하고 있다면, Undefined 상태가 됨.
 : Natvie Method를 수행하기 위한 메모리 영역으로 Native Method Stack을 사용함.
 
+- Native Method Stack
+: JNI를 통해 실행된 Native Method들이 사용하는 Stack
+
 ### [ Execution Engine ]
 
 - Interpreter
@@ -86,6 +117,8 @@ JIT Compiler를 통해 동적으로 해당 코드를 기계어 코드로 컴파�
 - GC가 일어나는 Heap 메모리 영역에 따라 Minor GC, Major GC로 나뉘고
 Major GC 때 STW 문제로 인해 어플리케이션이 멈추는데, 이는 애플리케이션 성능을 크게 좌우한다.
 
+### [ JNI Interface ]
+
 
 ## Java
 - JVM 기반에서 작동하는 OOP언어
@@ -105,17 +138,15 @@ Major GC 때 STW 문제로 인해 어플리케이션이 멈추는데, 이는 애
 
 ## JDK, JRE, JVM
 
-< 개요 >
-
 - JDK는 JRE를 포함하고, JRE는 JVM을 포함한다.
 
-- JDK = JRE + ( javac, javap, javadoc, java, jar )
+- JDK = JRE + 개발 관련 도구( javac, javap, javadoc, java, jar )
 
 - JRE = JVM + ( Class Libs / File for supporting execution of program )
 
-- JVM = Runtime Data Area / Interpreter / JIT Compiler / Garbage Collector
+- JVM = Class Loader + Runtime Data Area(Method, Heap, PC Register, Stack, Native Method Stack ) <br>+ Execution Engine( Interpreter / JIT Compiler / Garbage Collector ) + JNI Interface + JNI Library
 
-< 상세 >
+JDK
 - javac : 자바 언어를 바이트 코드로 컴파일 해주는 자바 컴파일러(javac)
 
 - javap : 자바 클래스 파일을 해석해주는 역 어셈블리어
@@ -127,13 +158,17 @@ Major GC 때 STW 문제로 인해 어플리케이션이 멈추는데, 이는 애
 
 - java : javac을 통해 컴파일된 클래스 파일 ( 바이트 코드 )을 실행한다. ( java testClass)
 
+JRE
+
 - JRE는 자바 실행 환경으로
 JVM 및 자바 클래스 라이브러리, 기타 자바 어플리케이션 실행에 필요한 파일을 포함한다.
+
+JVM  
 
 - JVM은 자바 가상 머신으로,
 자바 어플리케이션을 실행하는 가상 머신이다.
 실제 컴퓨터로부터 Java 어플리케이션 실행을 위한 메모리를 할당받아
-Runtime Data Area를 구성한다.
+Runtime Data Area를 구성하고, 실행 엔진을 통해 바이트 코드를 기계어로 바꿔준다.
 
 - JVM은 인터프리터 / JIT 컴파일러를 통해 바이트 코드를 각 운영체제에 맞는 기계어로 해석시켜 실행시킨다.
 또한, GC를 통해 어플리케이션의 Heap 메모리를 관리한다.
