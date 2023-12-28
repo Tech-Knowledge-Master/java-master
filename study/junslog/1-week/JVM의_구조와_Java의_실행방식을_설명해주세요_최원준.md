@@ -203,3 +203,25 @@ Heap / Method / 그 외 영역으로 구분된다.
 
 - 모든 스레드들이 실행되고 종료되면, JVM이 종료되면서
 Heap 영역과 Method 영역도 사라진다.
+
+---
+< PermGen vs MetaSpace >
+PermGen (Java 7 이전):
+
+위치: Heap 영역 안에 속함.
+목적: 클래스 메타데이터와 클래스 인스턴스를 저장.
+문제: 클래스 로딩이 많아지면서 PermGen 공간이 부족할 수 있었고, 이로 인한 OutOfMemoryError가 발생하기도 했습니다.
+크기 조절: -XX:MaxPermSize와 같은 옵션을 통해 PermGen 크기를 조절할 수 있었습니다.
+Metaspace (Java 8 이후):
+
+위치: Heap이 아닌 Native 메모리 영역에 위치함.
+목적: 클래스 메타데이터를 저장. PermGen과는 달리, 동적으로 크기가 조절됨.
+문제 해결: Metaspace는 Heap 외부에 위치하므로 Heap 관련 문제가 발생하지 않음.
+크기 조절: -XX:MaxMetaspaceSize와 같은 옵션을 통해 Metaspace 크기를 제한할 수 있음.
+차이점:
+
+위치: PermGen은 Heap 내에 위치했지만, Metaspace는 Native 메모리에 위치함.
+크기 조절: PermGen은 고정 크기였지만, Metaspace는 동적으로 조절 가능.
+OutOfMemoryError: PermGen은 클래스 메타데이터 공간이 부족할 경우 발생했지만, Metaspace는 Native 메모리를 사용하므로 다른 종류의 메모리 오류가 발생할 수 있음.
+
+< MetaSpace vs Method Area >
