@@ -21,13 +21,14 @@
 5. Interfaces(if any): A comma-separated list of interfaces implemented by the class, if any, preceded by the keyword implements. A class can implement more than one interface. 
 6. Body: The class body is surrounded by braces, { }.
 
-
 # ✎ Object
 객체는 객체 지향 언어에서 가장 기본이 되는 단위이며, 실제 개체를 나타낸다.
 
 객체를 선언하게 되면 클래스를 인스턴스화 하게 되는데, 이 때 클래스는 메모리 위에 올라가게 된다.
 
 한 클래스에서 나온 모든 객체는 클래스의 속성과 동작을 공유하지만 해당 객체의 상태(변수의 값 등)은 서로 독립적으로 움직인다.
+
+![classAndObject.webp](image%2FclassAndObject%2FclassAndObject.webp)
 
 ## Object 생성 방법
 1. new 키워드 사용
