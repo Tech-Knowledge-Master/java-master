@@ -112,6 +112,7 @@ CPU의 덧셈 연산은 2개의 피연산자를 다루므로 20 + 7 를 계산�
     - Class 인지 Interface 인지 혹은 Type의 속성, 이름, super class의 이름 등 
     - 또한 Method Area에는 상수형을 저장하고 중복을 막는 Runtime Constant Pool이 존재
 
+---
 ### 참고 자료
 - https://www.korecmblog.com/blog/jvm-stack-and-register
 - https://asfirstalways.tistory.com/158

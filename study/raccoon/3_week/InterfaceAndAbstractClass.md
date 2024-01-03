@@ -18,6 +18,7 @@
 
 따라서 추상클래스는 구현체가 존재하지 않으므로 당연히(?) 인스턴스를 생성할 수 없다.
 하지만 자식 클래스가 구현 코드를 작성하면, 자식 클래스는 인스턴스를 생성할 수 있게 되는 것이다.
+
 ![Interface and Abstract Class.png](image%2FinterfaceAndAbstractClass%2FInterface%20and%20Abstract%20Class.png)
 
 ## Abstract Method
@@ -45,6 +46,8 @@
 | 필드	     | 일반 변수, 상수 모두 가능	 | 상수(static final)만 가능               |
 | 상속 키워드	 | extends          | implements                         |
 | 접근 제어자	 | 제한 없음	           | public                             |
+
+---
 ### 참고 자료
 - https://tcpschool.com/java/java_polymorphism_interface
 - https://tcpschool.com/java/java_polymorphism_abstract

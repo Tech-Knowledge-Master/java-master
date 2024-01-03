@@ -105,6 +105,7 @@ Map 인터페이스를 구현하는 클래스는 HashMap, Hashtable, TreeMap, So
 
 Map은 키와 값을 쌍으로 저장하기 때문에 **iterator()를 직접 호출할 수 없다.** 때문에 keySet(), entrySet()와 같은 메서드를 이용해 Set 형태로 반환된 컬렉션에 iterator()를 호출해야 한다.
 
+---
 ### 참고 자료
 - https://hudi.blog/java-collection-framework-1/
 - https://velog.io/@kai6666/Java-%EC%BB%AC%EB%A0%89%EC%85%98-%ED%94%84%EB%A0%88%EC%9E%84%EC%9B%8C%ED%81%AC-Collection-Framework

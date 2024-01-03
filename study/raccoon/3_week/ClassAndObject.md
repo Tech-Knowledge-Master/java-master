@@ -59,6 +59,7 @@
 - 메서드 호출 후에는 삭제된다.
 - 그들은 다양한 라이브러리에서 널리 사용된다. 예를 들어, AWT 라이브러리에서는 이벤트 캡처(예: 키 누르기)에 대한 일부 작업을 수행하는 데 사용된다.
 
+---
 ### 참고 자료
 - https://www.w3schools.com/java/java_classes.asp
 - https://www.geeksforgeeks.org/classes-objects-java/
