@@ -69,7 +69,7 @@ JVM의 Runtime Data Area에 로드하는 모듈이다.
 
 
 ### [ Runtime Data Area ]
-![img.png](../img/1-week-jvm-runtime-data-area.png)
+![img.png](img/1-week-jvm-runtime-data-area.png)
 
 - Runtime Data Area의 데이터 영역을 크게 나누는 기준은
 해당 메모리 영역들이 JVM의 Thread 들에 공유되는지, 아닌지를 기준으로 볼 수 있다.
