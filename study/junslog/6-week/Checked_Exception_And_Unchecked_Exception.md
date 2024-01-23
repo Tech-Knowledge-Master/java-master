@@ -104,3 +104,6 @@ Exception 클래스의 하위 클래스들입니다. 체크 예외의 특징은 
 -> 런타임에 발생 여부를 확인할 수 있습니다.
 -> 예외 발생 시 트랜잭션을 Rollback 합니다.
 -> 대표적인 예외로는 NullPointerException(NPE), IllegalArgumentException, IndexOutOfBoundException, SystemException
+
+### 참고하면 좋을 자료 ( 특히, 예외 처리하는 방법 부분 )
+https://mangkyu.tistory.com/152
