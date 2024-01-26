@@ -3,7 +3,7 @@
 ```text
 Java 8에 추가된 기능으로는
 함수형 인터페이스 도입, Lambda 표현식, 메서드 참조, 
-Optional 클래스 도입, 날짜 시간 API 수정, Stream API,
+Optional 클래스 도입, 날짜 시간 API 수정, Stream API 도입,
 인터페이스의 Static 및 Default 메서드 도입 등이 있습니다.
 ```
 
