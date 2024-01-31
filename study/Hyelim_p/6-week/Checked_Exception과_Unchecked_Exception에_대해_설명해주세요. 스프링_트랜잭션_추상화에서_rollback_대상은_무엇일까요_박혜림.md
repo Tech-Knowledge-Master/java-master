@@ -26,6 +26,10 @@ RuntimeException
 ### Unchecked exceptions / Runtime exceptions
 - UnCheckedException 은 자바 컴파일러가 처리할 필요가 없는 예외이다. 컴파일러가 신경 쓰지 않기 때문에 별도의 예외처리를 해주지 않아도 된다.
 - NullPointerException, IllegalArgumentException, and SecurityException.
+
+![image](https://github.com/Tech-Knowledge-Master/java-master/assets/62535887/c53f47bf-be1d-4c4e-8570-d667e04e0ceb)
+
+별도의 예외 처리를 하지 않아도 컴파일이 가능하다.
 ### Errors
 - 라이브러리 비 호환성, 무한 재귀, 메모리 누수와 같은 심각하고 일반적으로 복구할 수 없는 상태를 나타낸다.
 - OutOfMemoryError, StackOverflowError 
@@ -33,9 +37,8 @@ RuntimeException
 
 ### throws 키워드
 throws 는 메소드 선언부에서 사용되며 해당 메서드에서 발생할 수 있는 예외를 명시적으로 선언한다.
-이런 맥락에서 throw 키워드 뒤에 오는 예외는 주로 Checked Exception 이다.
 이 메소드를 호출하는 쪽에서 예외를 명시적으로 처리해야한다.
-> "throw"는 예외를 발생시키는 데 사용되고, "throws"는 메서드에서 발생할 수 있는 예외를 선언하는 데 사용
+> "throw"는 예외를 발생시키는 데 사용되고, "throws"는 메서드에서 발생할 수 있는 예외를 선언하는 데 사용, 호출하는 쪽에서 예외 별도 처리 필요
 
 ### try-catch-finally
 try 블록 안에서 예외가 발생할 수 있는 코드를 감싸고, 예외가 발생하면 catch 블록이 실행되어 예외를 처리한다.
@@ -65,6 +68,39 @@ public class Example {
 ### 스프링 트랜잭션 추상화에서 rollback 의 대상
 기본적으로 CheckedException 은 예외가 발생하면 트랜잭션 roll-back 하지 않고 예외를 던져준다. 하지만
 Unchecked Exception 은 예외 발생 시 트랜잭션 roll-back 한다는 점에서 큰 차이가 있다.
+
+### 자바 예외 권장 사항
+throws 를 사용해 상위 메소드로 반복적인 예외를 던지는 것은 좋지 않다.
+
+1-1. throws 를 사용해 상위메소드로 예외 처리를 위임(권장 ❌)
+```Java
+public class ObjectMapperUtil {
+
+  private final ObjectMapper objectMapper = new ObjectMapper();
+
+  // 예외처리를 throws를 통해서 위임하고 있습니다.
+  public String writeValueAsString(Object object) throws JsonProcessingException {
+    return objectMapper.writeValueAsString(object);
+  }
+
+  // 예외처리를 throws를 통해서 위임하고 있습니다.
+  public <T> T readValue(String json, Class<T> clazz) throws IOException {
+    return objectMapper.readValue(json, clazz);
+  }
+}
+```
+
+1-2. 메소드를 사용하는 곳에서 try-catch 로 처리하거나 throw 로 다시 예외를 발생시켜야한다. (권장 ❌)
+   
+![image](https://github.com/Tech-Knowledge-Master/java-master/assets/62535887/c7947340-be44-43dc-9d7f-4c84a13a227f)
+
+2-1. 따라서 아래와 같은 방법으로 예외 처리를 구체화 시켜야한다.checkedException 을 uncheckedException 으로 구체화시키자 (권장 ⭕️)
+
+![image](https://github.com/Tech-Knowledge-Master/java-master/assets/62535887/df185972-f9ed-4389-9d3d-2d15b4cb62e2)
+
+2-2. Checked Exception을 Unckecekd Exception으로 던지고 있기 때문에 메소드를 호출하는 곳에서는 별도의 예외 처리가 필요가 없어진다.(권장 ⭕️)
+
+![image](https://github.com/Tech-Knowledge-Master/java-master/assets/62535887/d86f7e46-3720-4c03-a8f1-341b42600bf0)
 
 
 ---
