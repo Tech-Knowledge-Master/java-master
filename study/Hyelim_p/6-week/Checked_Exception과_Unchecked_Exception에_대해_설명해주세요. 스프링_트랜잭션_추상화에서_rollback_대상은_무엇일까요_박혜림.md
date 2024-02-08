@@ -63,9 +63,11 @@ public class Example {
 ```
 
 ### 스프링 트랜잭션 추상화에서 rollback 의 대상
-기본적으로 CheckedException 은 예외가 발생하면 트랜잭션 roll-back 하지 않고 예외를 던져준다. 하지만
-Unchecked Exception 은 예외 발생 시 트랜잭션 roll-back 한다는 점에서 큰 차이가 있다.
+```기본적으로``` CheckedException 은 예외가 발생하면 트랜잭션 roll-back 하지 않고 예외를 던져준다.
 
+하지만
+Unchecked Exception 은 예외 발생 시 트랜잭션 roll-back 한다는 점에서 큰 차이가 있다.
+> 자바에서의 트랜젝션에서 위를 논하면 틀리다. 스프링에서 기본적으로 롤백 대상 예외가 UnCheckedException 인 것이다. - 백기선님 유튭
 
 ---
 
