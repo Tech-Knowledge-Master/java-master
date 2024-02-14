@@ -478,7 +478,6 @@ public class StringJoinerExample {
 ```
 
 ```text
-
 It is empty
 Rahul,Raju
 Length: 10
