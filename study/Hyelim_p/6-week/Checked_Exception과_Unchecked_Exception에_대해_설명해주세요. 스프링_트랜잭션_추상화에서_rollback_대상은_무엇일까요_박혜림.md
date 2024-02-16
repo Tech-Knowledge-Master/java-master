@@ -2,34 +2,30 @@
 컴파일러가 에러처리를 확인하지 않는 RuntimeException 클래스들은 unchecked 예외라고 부르고 
 예외처리를 확인하는 Exception 클래스들은 checked 예외이다.
 
-```
-              ---> Throwable <--- 
-              |    (checked)     |
-              |                  |
-              |                  |
-      ---> Exception           Error
-      |    (checked)        (unchecked)
-      |
-RuntimeException
-  (unchecked)
+![img.png](img.png)
 
-```
-### Checked exceptions
+### Checked exception
 - Checked Exception 은 자바 컴파일러가 처리해야하는 예외이다.
-- throw 키워드를 사용해서 선언적으로 예외를 던지거나 try-catch 형태로 예외를 직접 처리해야 한다는 의미
-- Exception 클래스를 상속하는 클래스들 - IOException, ServletException 등
+- throws 키워드를 사용해서 상위 클래스로 예외를 던지거나, try-catch 형태로 예외를 직접 처리해야 한다는 의미
+- ```Exception 클래스를 상속```하는 클래스들 - IOException, ServletException, SQLException 등
 - 클라이언트가 예외를 직접 처리하고 예외를 복구할 것으로 예측할 수 있을 때 사용하기 적합한 Exception 타입
 
 ![img_1.png](img_1.png)
 
 예외를 처리하지 않으면 위처럼 컴파일러가 에러를 보여준다.
-### Unchecked exceptions / Runtime exceptions
+
+- checkedException 은 복구 불가능한 예외라는 점과 의존관계에 대한 문제가 존재한다. 서비스/ 컨트롤러에서 특정 예외에 의존하게 된다는 점이다.
+### Unchecked exception / Runtime exception
+- RuntimeException 과 그 하위 예외들
 - UnCheckedException 은 자바 컴파일러가 처리할 필요가 없는 예외이다. 컴파일러가 신경 쓰지 않기 때문에 별도의 예외처리를 해주지 않아도 된다.
 - NullPointerException, IllegalArgumentException, and SecurityException.
 
-![image](https://github.com/Tech-Knowledge-Master/java-master/assets/62535887/c53f47bf-be1d-4c4e-8570-d667e04e0ceb)
+- 보통 비지니스 로직에서는 CheckedException 을 잡아 custom UnCheckedException 으로 바꿔주고, 서블릿 필터, 스프링 인터셉터, 스프링 ControllerAdvice
+를 사용해 공통으로 예외를 해결한다.
 
-별도의 예외 처리를 하지 않아도 컴파일이 가능하다.
+> 체크 예외의 경우 예외를 반드시 던져야 하는 등의 단점이 존재하기에 최근 라이브러리들은 대부분 런타임 예외를 기본으로 한다.
+> 런타임 예외의 경우 필요하면 잡을 수 있고, 그렇지 않으면 자연스럽게 던지도록 두고 예외를 처리하는 부분을 공통으로 앞에 만들어 처리하면 된다.
+
 ### Errors
 - 라이브러리 비 호환성, 무한 재귀, 메모리 누수와 같은 심각하고 일반적으로 복구할 수 없는 상태를 나타낸다.
 - OutOfMemoryError, StackOverflowError 
@@ -66,41 +62,12 @@ public class Example {
 ```
 
 ### 스프링 트랜잭션 추상화에서 rollback 의 대상
-기본적으로 CheckedException 은 예외가 발생하면 트랜잭션 roll-back 하지 않고 예외를 던져준다. 하지만
+```기본적으로``` CheckedException 은 예외가 발생하면 트랜잭션 roll-back 하지 않고 예외를 던져준다.
+
+
+하지만
 Unchecked Exception 은 예외 발생 시 트랜잭션 roll-back 한다는 점에서 큰 차이가 있다.
-
-### 자바 예외 권장 사항
-throws 를 사용해 상위 메소드로 반복적인 예외를 던지는 것은 좋지 않다.
-
-1-1. throws 를 사용해 상위메소드로 예외 처리를 위임(권장 ❌)
-```Java
-public class ObjectMapperUtil {
-
-  private final ObjectMapper objectMapper = new ObjectMapper();
-
-  // 예외처리를 throws를 통해서 위임하고 있습니다.
-  public String writeValueAsString(Object object) throws JsonProcessingException {
-    return objectMapper.writeValueAsString(object);
-  }
-
-  // 예외처리를 throws를 통해서 위임하고 있습니다.
-  public <T> T readValue(String json, Class<T> clazz) throws IOException {
-    return objectMapper.readValue(json, clazz);
-  }
-}
-```
-
-1-2. 메소드를 사용하는 곳에서 try-catch 로 처리하거나 throw 로 다시 예외를 발생시켜야한다. (권장 ❌)
-   
-![image](https://github.com/Tech-Knowledge-Master/java-master/assets/62535887/c7947340-be44-43dc-9d7f-4c84a13a227f)
-
-2-1. 따라서 아래와 같은 방법으로 예외 처리를 구체화 시켜야한다.checkedException 을 uncheckedException 으로 구체화시키자 (권장 ⭕️)
-
-![image](https://github.com/Tech-Knowledge-Master/java-master/assets/62535887/df185972-f9ed-4389-9d3d-2d15b4cb62e2)
-
-2-2. Checked Exception을 Unckecekd Exception으로 던지고 있기 때문에 메소드를 호출하는 곳에서는 별도의 예외 처리가 필요가 없어진다.(권장 ⭕️)
-
-![image](https://github.com/Tech-Knowledge-Master/java-master/assets/62535887/d86f7e46-3720-4c03-a8f1-341b42600bf0)
+> 자바에서의 트랜젝션에서 위를 논하면 틀리다. 스프링에서 기본적으로 롤백 대상 예외가 UnCheckedException 인 것이다. - 백기선님 유튭
 
 
 ---
